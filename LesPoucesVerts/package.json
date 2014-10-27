@@ -1,9 +1,13 @@
 {
-    "name": "les-pouces-verts",
-    "description": "Les pouces verts",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "4.x"
-    }
+  "name": "les-pouces-verts",
+  "description": "Les pouces verts",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "4.x"
+  },
+  "devDependencies": {
+    "mongojs": "^0.15.1",
+    "restify": "^2.8.3"
+  }
 }
