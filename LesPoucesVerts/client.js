@@ -1,5 +1,4 @@
 var restify = require('restify');
-var server = require('./server');
 
 var client = restify.createJsonClient({
     url: 'http://localhost:3000'
