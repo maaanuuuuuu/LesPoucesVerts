@@ -1,17 +1,48 @@
-var restify = require('restify');
+var restify = require('restify');  //express light en gros
 var mongojs = require('mongojs');
 
-var db = mongojs('mongodb://desiremmanuel:8818196892W8i9G3@ds063889.mongolab.com:63889/les_pouces_verts_dev', ['plants']);
+var db = mongojs('mongodb://desiremmanuel:8818196892W8i9G3@ds063889.mongolab.com:63889/les_pouces_verts_dev', ['plants', 'mesures']);
 
-var server = restify.createServer();
+var server = restify.createServer({
+    // certificate:...
+    // key:...
+    name: "poucesServer"
+});
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
-server.listen(3000, function () {
+server.listen(3000, function () {     //start the server
     console.log("Server started @ 3000");
 });
+
+var routes = {
+    {
+        route: "/plants",
+        method: "get",
+        callback: plants.findall(req, res, next)
+    },
+    {
+        route: "/plants/:id",
+        method: "get",
+        callback: plants.findOne(req, res, next)
+    },
+    {
+        route: "/plants",
+        method: "post",
+        callback: plants.create(req, res, next)
+    },
+    {
+        route: "/plants",
+        method: "push",
+        callback: plants.edit(req, res, next)
+    }
+}
+
+for (route in routes) {
+        // déclarer les services ci dessous grace à routes
+};
 
 server.get("/plants", function (req, res, next) {
     db.plants.find(function (err, plants) {
@@ -74,5 +105,3 @@ server.put('/plants/:id', function (req, res, next) {
     });
     return next();
 });
-
-module.exports = server;
