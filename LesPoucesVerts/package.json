@@ -1,0 +1,9 @@
+{
+    "name": "les-pouces-verts",
+    "description": "Les pouces verts",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "express": "4.x"
+    }
+}
