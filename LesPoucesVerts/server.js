@@ -1,107 +1,57 @@
 var restify = require('restify');  //express light en gros
 var mongojs = require('mongojs');
+var fs = require("fs");
+var parameters = require("./Config/parameters");
+var collections = require("./collections");
 
-var db = mongojs('mongodb://desiremmanuel:8818196892W8i9G3@ds063889.mongolab.com:63889/les_pouces_verts_dev', ['plants', 'mesures']);
 
+//lecture des fichiers repository et donc création du db en fonction avec le bon collection
+    
+//initialisation de collection
+var collectionNames = [];
+for (var i = 0; i < collections.length; i++) {
+    collectionNames.push(collections[i].name);
+}
+
+
+//création de l'objet mongojs
+var db = mongojs(
+    parameters.db.connectionString(),
+    collectionNames
+);
+
+//création du server avec restify
 var server = restify.createServer({
     // certificate:...
     // key:...
     name: "poucesServer"
 });
-
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
-
 server.listen(3000, function () {     //start the server
     console.log("Server started @ 3000");
 });
 
-var routes = {
-    {
-        route: "/plants",
-        method: "get",
-        callback: plants.findall(req, res, next)
-    },
-    {
-        route: "/plants/:id",
-        method: "get",
-        callback: plants.findOne(req, res, next)
-    },
-    {
-        route: "/plants",
-        method: "post",
-        callback: plants.create(req, res, next)
-    },
-    {
-        route: "/plants",
-        method: "push",
-        callback: plants.edit(req, res, next)
-    }
+//initialize routes
+Routes = require("./Routes/Route");
+var routes = new Routes(db);
+routes = routes.routes;
+
+// générateur de routes
+for (var i = 0; i<routes.length; i++) {
+    route = routes[i];
+    // déclarer les services ci dessous grace à routes
+    switch(route.method) {
+        case "get":
+            server.get(route.route, route.callback);
+        break;
+        case "post":
+            server.post(route.route, route.callback);
+        break; 
+        case "put":
+            server.put(route.route, route.callback);
+        break;
+    } 
 }
 
-for (route in routes) {
-        // déclarer les services ci dessous grace à routes
-};
-
-server.get("/plants", function (req, res, next) {
-    db.plants.find(function (err, plants) {
-        res.writeHead(200, {
-            'Content-Type': 'application/json; charset=utf-8'
-        });
-        res.end(JSON.stringify(plants));
-    });
-    return next();
-});
-
-server.get('/plants/:id', function (req, res, next) {
-    db.plants.findOne({
-        id: req.params.id
-    }, function (err, data) {
-        res.writeHead(200, {
-            'Content-Type': 'application/json; charset=utf-8'
-        });
-        res.end(JSON.stringify(data));
-    });
-    return next();
-});
-
-server.post('/plants', function (req, res, next) {
-    var plants = req.params;
-    db.plants.save(plants,
-        function (err, data) {
-            res.writeHead(200, {
-                'Content-Type': 'application/json; charset=utf-8'
-            });
-            res.end(JSON.stringify(data));
-        });
-    return next();
-});
-
-server.put('/plants/:id', function (req, res, next) {
-    // get the existing plant
-    db.plants.findOne({
-        id: req.params.id
-    }, function (err, data) {
-        // merge req.params/plant with the server/plant
-        var updPlants = {}; // updated plants 
-        // logic similar to jQuery.extend(); to merge 2 objects.
-        for (var n in data) {
-            updPlants[n] = data[n];
-        }
-        for (var n in req.params) {
-            updPlants[n] = req.params[n];
-        }
-        db.plants.update({
-            id: req.params.id
-        }, updPlants, {
-            multi: false
-        }, function (err, data) {
-            res.writeHead(200, {
-                'Content-Type': 'application/json; charset=utf-8'
-            });
-            res.end(JSON.stringify(data));
-        });
-    });
-    return next();
-});
