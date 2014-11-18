@@ -13,13 +13,13 @@ var db = mongojs(
 var server = restify.createServer({
     // certificate:...
     // key:...
-    name: "poucesServer"
+    name: parameters.server.name
 });
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
-server.listen(3000, function () {     //start the server
-    console.log("Server started @ 3000");
+server.listen(parameters.server.port, function () {     //start the server
+    console.log("Server started @ "+parameters.server.port);
 });
 
 

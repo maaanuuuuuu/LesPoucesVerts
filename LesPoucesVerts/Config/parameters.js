@@ -1,6 +1,10 @@
 module.exports = {
     repoDir: "./Repositories/",
     routeDir: "./Routes/",
+    server:{
+        name: "poucesServer",
+        port: 3000
+    },
     db:{
         login: "desiremmanuel",
         pwd: "no",

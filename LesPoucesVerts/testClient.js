@@ -1,8 +1,9 @@
 var restify = require('restify');
 var server = require('./server');
+var parameters = require("./Config/parameters");
 
 var client = restify.createJsonClient({
-    url: 'http://localhost:3000'
+    url: 'http://localhost:'+parameters.server.port
 });
 
 // a static plants to CREATE READ UPDATE DELETE
