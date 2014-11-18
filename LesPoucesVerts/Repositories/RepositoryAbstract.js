@@ -54,7 +54,6 @@ module.exports = function Repository(db, collectionName)
             for (var n in req.params) {
                 updProducts[n] = req.params[n];
             }
-            console.log("coleciton name="+collectionName);
             db.collection(collectionName).update(
                 {
                     id: req.params.id

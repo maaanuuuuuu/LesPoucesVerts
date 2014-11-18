@@ -1,8 +1,6 @@
-module.exports = function Route(db)
+module.exports = function Route(db, collections)
 { 
     Repository = require("../Repositories/RepositoryAbstract");
-
-    collections = require("../collections.js");
 
     this.routes = [];
 

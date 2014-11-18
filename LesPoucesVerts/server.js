@@ -4,20 +4,9 @@ var fs = require("fs");
 var parameters = require("./Config/parameters");
 var collections = require("./collections");
 
-
-//lecture des fichiers repository et donc création du db en fonction avec le bon collection
-    
-//initialisation de collection
-var collectionNames = [];
-for (var i = 0; i < collections.length; i++) {
-    collectionNames.push(collections[i].name);
-}
-
-
 //création de l'objet mongojs
 var db = mongojs(
-    parameters.db.connectionString(),
-    collectionNames
+    parameters.db.connectionString()
 );
 
 //création du server avec restify
@@ -33,9 +22,20 @@ server.listen(3000, function () {     //start the server
     console.log("Server started @ 3000");
 });
 
+
+// //créer les tables si elles n'existents pas encore
+   
+for (var i = 0; i < collections.length; i++) {
+    var collection = collections[i];
+    db.createCollection(collection.name, function(err, createdCollection){
+        console.log("Created ");
+        console.log(createdCollection);
+    });
+};
+
 //initialize routes
 Routes = require("./Routes/Route");
-var routes = new Routes(db);
+var routes = new Routes(db, collections);
 routes = routes.routes;
 
 // générateur de routes
