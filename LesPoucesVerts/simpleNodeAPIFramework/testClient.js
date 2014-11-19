@@ -1,7 +1,7 @@
 var restify = require('restify');
 var server = require('./server');
-var parameters = require("./Config/parameters");
-
+Parameters = require("./Config/parametersImporter");
+var parameters = Parameters();
 var client = restify.createJsonClient({
     url: 'http://localhost:'+parameters.server.port
 });

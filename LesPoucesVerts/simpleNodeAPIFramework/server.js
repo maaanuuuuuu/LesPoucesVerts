@@ -1,8 +1,9 @@
 var restify = require('restify');  //express light en gros
 var mongojs = require('mongojs');
 var fs = require("fs");
-var parameters = require("./Config/parameters");
-var collections = require("./collections");
+Parameters = require("./Config/parametersImporter");
+var parameters = Parameters();
+var collections = require("../collections");
 
 //création de l'objet mongojs
 var db = mongojs(
